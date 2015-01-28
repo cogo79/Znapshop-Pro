@@ -2,11 +2,79 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Title of the document</title>
+		<title>Znapshop Pro</title>
+		<script src="jquery.min.js"></script>
+		<style>
+
+			html, body {
+				/* Standard */
+				height: calc(100% - 41px);
+
+				/* Firefox */
+				height: -moz-calc(100% - 44px);
+
+				
+			}
+			.canvasContainer_ME {
+				border: 1px solid black;
+				background-color:lightgray;
+				height: 100%;
+				overflow: auto;
+				padding: 5px;
+			}
+			.canvas_ME {
+				border: 1px solid black;
+				background-color: white;
+				height: 400px;
+				width: 1500px;
+			}
+
+		</style>
+
+
+		<script type="text/javascript">
+			
+
+		</script>
 	</head>
 
 	<body>
-		Content of the document......
+		<h1 style="margin-bottom: 10px;">Znapshop Pro</h1>
+		<div class="canvasContainer_ME">
+			<canvas class="canvas_ME"></canvas>
+		</div>
 	</body>
+
+	<script type="text/javascript">
+
+		$(window).resize(function(){
+
+			var left = function() {
+				if( $('.canvas_ME').outerWidth() > $('.canvasContainer_ME').width() ) {
+					return 0;
+				} else {
+					return ($('.canvasContainer_ME').width() - $('.canvas_ME').outerWidth()) / 2;
+				}
+			};
+
+			var top = function() {
+				if( $('.canvas_ME').outerHeight() > $('.canvasContainer_ME').height() ) {
+					return 0;
+				} else {
+					return ($('.canvasContainer_ME').height() - $('.canvas_ME').outerHeight()) / 2;
+				}
+			};
+
+			$('.canvas_ME').css({
+				position:'relative',
+				left: left(),
+				top: top()
+			});
+
+		});
+
+		// To initially run the function:
+		$(window).resize();
+	</script>
 
 </html>
