@@ -110,7 +110,8 @@
 		var toolbarHidden = false;
 		var hideToolbar = function() {
 			$('.toolbar_ME').hide();
-			$('.canvasContainer_ME').css('width', '100%');
+			$('.canvasContainer_ME').css('width', 'calc(100% - 2px)');
+			$('.canvasContainer_ME').css('width', '-moz-calc(100% - 2px)');
 			toolbarHidden = true;
 			$('.toggleToolbar_ME').html("Show toolbar");
 			$(window).resize();
