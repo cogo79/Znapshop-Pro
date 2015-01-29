@@ -3,7 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Znapshop Pro</title>
-		<script src="jquery.min.js"></script>
+		<script src="jquery.min.js">
+
+		</script>
 		<style>
 
 			html, body {
@@ -15,21 +17,36 @@
 
 				
 			}
+			.toggleToolbar_ME {
+				position: absolute;
+				/* Standard */margin-left: calc(100% - 150px);
+				/* Firefox */margin-left: -moz-calc(100% - 150px);
+				width:134px;
+				height: 55px;
+				top:4px;
+			}
 			.canvasContainer_ME {
 				border: 1px solid black;
 				background-color:lightgray;
 				height: 100%;
+				/* Standard */width: calc(100% - 257px);
+				/*Firefox*/ width: -moz-calc(100% - 257px);
 				overflow: auto;
-
+				float:left;
 			}
 			.canvas_ME {
 				border: 1px solid black;
 				background-color: white;
 				margin: 5px;
-				
-			}
-			.canvasWraper_ME {
 
+			}
+			.toolbar_ME {
+				width: 250px;
+				height: 100%;
+				/* Standard */height: calc(100% + 0px);
+				/* Firefox */height: -moz-calc(100% + 0px);
+				float:right;
+				border:1px solid black;
 			}
 
 		</style>
@@ -42,11 +59,15 @@
 	</head>
 
 	<body>
-		<h1 style="margin-bottom: 10px;">Znapshop Pro</h1>
+		<button class="toggleToolbar_ME" type="button">Hide toolbar</button>
+		<h1 class="header_ME" style="margin-bottom: 10px;">Znapshop Pro</h1>
 		<div class="canvasContainer_ME">
 			<div class="canvasWraper_ME">
 				<canvas class="canvas_ME"></canvas>
 			</div>
+		</div>
+		<div class="toolbar_ME">
+			<h1 class="toolSettingsHeader_ME">Tool settings</h1>
 		</div>
 	</body>
 
@@ -57,7 +78,7 @@
 			$('.canvas_ME').css({height: height, width:width, margin: (margin/2) - 1 });
 			$('.canvasWraper_ME').css({height: height+margin, width:width+margin});
 		};
-		setCanvasSize(2000,100);
+		setCanvasSize(300,700);
 
 		$(window).resize(function(){
 
