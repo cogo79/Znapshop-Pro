@@ -17,20 +17,20 @@
 
 				
 			}
+
 			.toggleToolbar_ME {
 				position: absolute;
 				/* Standard */margin-left: calc(100% - 150px);
 				/* Firefox */margin-left: -moz-calc(100% - 150px);
 				width:134px;
 				height: 55px;
-				top:4px;
+				top: 4px;
+				top: -moz-calc(10px);
 			}
 			.canvasContainer_ME {
 				border: 1px solid black;
 				background-color:lightgray;
 				height: 100%;
-				/* Standard */width: calc(100% - 257px);
-				/*Firefox*/ width: -moz-calc(100% - 257px);
 				overflow: auto;
 				float:left;
 			}
@@ -105,9 +105,32 @@
 			});
 
 		});
+		
 
-		// To initially run the function:
-		$(window).resize();
+		var toolbarHidden = false;
+		var hideToolbar = function() {
+			$('.toolbar_ME').hide();
+			$('.canvasContainer_ME').css('width', '100%');
+			toolbarHidden = true;
+			$('.toggleToolbar_ME').html("Show toolbar");
+			$(window).resize();
+		};
+		var showToolbar = function() {
+			$('.toolbar_ME').show();
+			$('.canvasContainer_ME').css('width', 'calc(100% - 257px)');
+			$('.canvasContainer_ME').css('width', '-moz-calc(100% - 257px)');
+			toolbarHidden = false;
+			$('.toggleToolbar_ME').html("Hide toolbar");
+			$(window).resize();
+		};
+		$('.toggleToolbar_ME').click(function() {
+			if (toolbarHidden) {
+				showToolbar();
+			} else {
+				hideToolbar();
+			}
+		});
+		showToolbar();
 	</script>
 
 </html>
