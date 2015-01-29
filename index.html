@@ -47,6 +47,32 @@
 				/* Firefox */height: -moz-calc(100% + 0px);
 				float:right;
 				border:1px solid black;
+				overflow: auto;
+			}
+			.toolbarHeader_ME {
+				font: 15px arial bold, sans-serif;
+				margin-left: 10px;
+				margin-bottom: 0px;
+			}
+			.toolbarSubHeader_ME {
+				font: 12px arial, sans-serif;
+				margin-left: 20px;
+				margin-top: 0px;
+				margin-bottom: 0px;
+
+			}
+			.toolbarLine_ME {
+				border-bottom: 0px;
+				color: black;
+				margin-right: 4px;
+				margin-left: 4px;
+				margin-top: 0px;
+				margin-bottom: 4px;
+			}
+			.toolbarDropDownMenu_ME {
+				margin-left: 30px;
+				margin-right: 10px;
+				width: 200px;
 			}
 
 		</style>
@@ -67,7 +93,15 @@
 			</div>
 		</div>
 		<div class="toolbar_ME">
-			<h1 class="toolSettingsHeader_ME">Tool settings</h1>
+			<h1 class="toolbarHeader_ME">Tool settings</h1>
+			<hr class="toolbarLine_ME" noshade>
+			<h1 class="toolbarSubHeader_ME">Current tool:</h1>
+			<select class="toolbarDropDownMenu_ME">
+				<option value="pen">Pen</option>
+				<option value="brush">Brush</option>
+				<option value="line">Line</option>
+			</select>
+
 		</div>
 	</body>
 
