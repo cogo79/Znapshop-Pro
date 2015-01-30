@@ -18,7 +18,7 @@
 				
 			}
 
-			.toggleToolbar_ME {
+			.toggleToolbar_ZP {
 				position: absolute;
 				/* Standard */margin-left: calc(100% - 150px);
 				/* Firefox */margin-left: -moz-calc(100% - 150px);
@@ -27,20 +27,20 @@
 				top: 4px;
 				top: -moz-calc(10px);
 			}
-			.canvasContainer_ME {
+			.canvasContainer_ZP {
 				border: 1px solid black;
 				background-color:lightgray;
 				height: 100%;
 				overflow: auto;
 				float:left;
 			}
-			.canvas_ME {
+			.canvas_ZP {
 				border: 1px solid black;
 				background-color: white;
 				margin: 5px;
 
 			}
-			.toolbar_ME {
+			.toolbar_ZP {
 				width: 250px;
 				height: 100%;
 				/* Standard */height: calc(100% + 0px);
@@ -49,19 +49,19 @@
 				border:1px solid black;
 				overflow: auto;
 			}
-			.toolbarHeader_ME {
+			.toolbarHeader_ZP {
 				font: 15px arial bold, sans-serif;
 				margin-left: 10px;
 				margin-bottom: 0px;
 			}
-			.toolbarSubHeader_ME {
+			.toolbarSubHeader_ZP {
 				font: 12px arial, sans-serif;
 				margin-left: 20px;
 				margin-top: 0px;
 				margin-bottom: 0px;
 
 			}
-			.toolbarLine_ME {
+			.toolbarLine_ZP {
 				border-bottom: 0px;
 				color: black;
 				margin-right: 4px;
@@ -69,9 +69,11 @@
 				margin-top: 0px;
 				margin-bottom: 4px;
 			}
-			.toolbarDropDownMenu_ME {
+			.input_ZP {
 				margin-left: 30px;
 				margin-right: 10px;
+				margin-bottom: 8px;
+				margin-top: 0px;
 				width: 200px;
 			}
 
@@ -85,23 +87,24 @@
 	</head>
 
 	<body>
-		<button class="toggleToolbar_ME" type="button">Hide toolbar</button>
-		<h1 class="header_ME" style="margin-bottom: 10px;">Znapshop Pro</h1>
-		<div class="canvasContainer_ME">
-			<div class="canvasWraper_ME">
-				<canvas class="canvas_ME"></canvas>
+		<button class="toggleToolbar_ZP" type="button">Hide toolbar</button>
+		<h1 class="header_ZP" style="margin-bottom: 10px;">Znapshop Pro</h1>
+		<div class="canvasContainer_ZP">
+			<div class="canvasWraper_ZP">
+				<canvas class="canvas_ZP"></canvas>
 			</div>
 		</div>
-		<div class="toolbar_ME">
-			<h1 class="toolbarHeader_ME">Tool settings</h1>
-			<hr class="toolbarLine_ME" noshade>
-			<h1 class="toolbarSubHeader_ME">Current tool:</h1>
-			<select class="toolbarDropDownMenu_ME">
+		<div class="toolbar_ZP">
+			<h1 class="toolbarHeader_ZP">Tool settings</h1>
+			<hr class="toolbarLine_ZP" noshade>
+			<h1 class="toolbarSubHeader_ZP">Current tool:</h1>
+			<select class="toolbarDropDownMenu_ZP input_ZP">
 				<option value="pen">Pen</option>
 				<option value="brush">Brush</option>
 				<option value="line">Line</option>
 			</select>
-
+			<h1 class="toolbarSubHeader_ZP">Tool width:</h1>
+			<input class="input_ZP" type="range">
 		</div>
 	</body>
 
@@ -109,30 +112,30 @@
 
 		var setCanvasSize = function(height, width) {
 			var margin = 20;
-			$('.canvas_ME').css({height: height, width:width, margin: (margin/2) - 1 });
-			$('.canvasWraper_ME').css({height: height+margin, width:width+margin});
+			$('.canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
+			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
 		};
 		setCanvasSize(300,700);
 
 		$(window).resize(function(){
 
 			var left = function() {
-				if( $('.canvasWraper_ME').outerWidth() > $('.canvasContainer_ME').width() ) {
+				if( $('.canvasWraper_ZP').outerWidth() > $('.canvasContainer_ZP').width() ) {
 					return 0;
 				} else {
-					return ($('.canvasContainer_ME').width() - $('.canvasWraper_ME').outerWidth()) / 2;
+					return ($('.canvasContainer_ZP').width() - $('.canvasWraper_ZP').outerWidth()) / 2;
 				}
 			};
 
 			var top = function() {
-				if( $('.canvasWraper_ME').outerHeight() > $('.canvasContainer_ME').height() ) {
+				if( $('.canvasWraper_ZP').outerHeight() > $('.canvasContainer_ZP').height() ) {
 					return 0;
 				} else {
-					return ($('.canvasContainer_ME').height() - $('.canvasWraper_ME').outerHeight()) / 2;
+					return ($('.canvasContainer_ZP').height() - $('.canvasWraper_ZP').outerHeight()) / 2;
 				}
 			};
 
-			$('.canvasWraper_ME').css({
+			$('.canvasWraper_ZP').css({
 				position:'relative',
 				left: left(),
 				top: top()
@@ -143,22 +146,22 @@
 
 		var toolbarHidden = false;
 		var hideToolbar = function() {
-			$('.toolbar_ME').hide();
-			$('.canvasContainer_ME').css('width', 'calc(100% - 2px)');
-			$('.canvasContainer_ME').css('width', '-moz-calc(100% - 2px)');
+			$('.toolbar_ZP').hide();
+			$('.canvasContainer_ZP').css('width', 'calc(100% - 2px)');
+			$('.canvasContainer_ZP').css('width', '-moz-calc(100% - 2px)');
 			toolbarHidden = true;
-			$('.toggleToolbar_ME').html("Show toolbar");
+			$('.toggleToolbar_ZP').html("Show toolbar");
 			$(window).resize();
 		};
 		var showToolbar = function() {
-			$('.toolbar_ME').show();
-			$('.canvasContainer_ME').css('width', 'calc(100% - 257px)');
-			$('.canvasContainer_ME').css('width', '-moz-calc(100% - 257px)');
+			$('.toolbar_ZP').show();
+			$('.canvasContainer_ZP').css('width', 'calc(100% - 257px)');
+			$('.canvasContainer_ZP').css('width', '-moz-calc(100% - 257px)');
 			toolbarHidden = false;
-			$('.toggleToolbar_ME').html("Hide toolbar");
+			$('.toggleToolbar_ZP').html("Hide toolbar");
 			$(window).resize();
 		};
-		$('.toggleToolbar_ME').click(function() {
+		$('.toggleToolbar_ZP').click(function() {
 			if (toolbarHidden) {
 				showToolbar();
 			} else {
