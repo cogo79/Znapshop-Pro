@@ -113,7 +113,7 @@
 		<h1 class="header_ZP" style="margin-bottom: 10px;">Znapshop Pro</h1>
 		<div class="canvasContainer_ZP">
 			<div class="canvasWraper_ZP">
-				<canvas id="canvas_ZP"></canvas>
+				<!--<canvas id="canvas_ZP" width="700" height="700"></canvas>-->
 			</div>
 		</div>
 		<div class="toolbar_ZP">
@@ -125,8 +125,8 @@
 				<option value="brush">Brush</option>
 				<option value="line">Line</option>
 			</select>
-			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool width:</h1>
-			<input class="input_ZP" type="range">
+			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool width: <span class="tool_width_shown_ZP"></span></h1>
+			<input id="tool_width_input_ZP" class="input_ZP" type="range" min="1" max="100" value="5">
 			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool color:</h1>
 			<input id="color_ZP" class="input_ZP" type="color">
 			<hr class="toolbarLine_ZP" noshade>
@@ -151,11 +151,13 @@
 
 		var setCanvasSize = function(height, width) {
 			var margin = 20;
+			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>'
+			$('.canvasWraper_ZP').html(canvas);
 			$('#canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
 			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
 			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
 		};
-		setCanvasSize(300,700);
+		setCanvasSize(500,500);
 
 		$(window).resize(function(){
 
@@ -215,6 +217,10 @@
 			var listItem = '<li id="' + id + '"><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">' + fileName + '</span></li>';
 			$('.toolbar_file_list_ZP').append(listItem);
 		};
+		$('.tool_width_input_ZP').on("change mousemove", function() {
+			console.log("change: ???");
+			//$('.tool_width_shown_ZP').html($('.tool_width_input_ZP').val());
+		});
 		
 		context = document.getElementById('canvas_ZP').getContext("2d");
 		
@@ -227,22 +233,34 @@
 		}
 		$('#canvas_ZP').mousedown(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			console.log("------> mousedown <------ x:" + pos.x + "  y:" + pos.y);
 			var strokeStyle = $('#color_ZP').val();
+			var lineJoin = "round";
+			var lineWidth = $('#tool_width_input_ZP').val();
+			contextStyle(strokeStyle, lineJoin, lineWidth);
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+				penMousuDown(pos);
+			}
 			
 		});
 		$('#canvas_ZP').mousemove(function(e){
-			//console.log("mousemove x:" + e.pageX + "  y:" + e.pageY);
+			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+				penMouseMove(pos);
+			}
 			
 		});
 		$('#canvas_ZP').mouseup(function(e){
+			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+				penMouseUp(pos);
+			}
 			
 		});
 		
 		var previosPos;
 		var contextStyle = function(strokeStyle,lineJoin,lineWidth) {
 			context.strokeStyle = strokeStyle;
-			context.lineJoin = lineJoin;
+			//context.lineJoin = lineJoin;
 			context.lineWidth = lineWidth;
 		};
 
@@ -251,48 +269,31 @@
 			drawing = true;
 			contextStyle(strokeStyle,lineJoin,lineWidth);
 			previosPos = pos;
+			context.beginPath();
+			context.fillRect(pos.x, pos.y ,1,1);
+			context.stroke();
 		};
 		var drawLine = function(from, to) {
 			context.beginPath();
 			context.moveTo(from.x, from.y);
 			context.lineTo(to.x, to.y);
-			context.closePath();
+
 			context.stroke();
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
 				drawLine(previosPos, to)
-				previosPos = pos;
+				previosPos = to;
 			}
 		};
 		var penMouseUp = function(pos) {
 			if (drawing) {
 				drawLine(previosPos, pos)
 				drawing = false;
+
 			}
 		};
 
-		/*
-		function redraw(){
-			context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-			context.strokeStyle = "#df4b26";
-			context.lineJoin = "round";
-			context.lineWidth = 5;
-
-			for(var i=0; i < clickX.length; i++) {		
-				context.beginPath();
-				if(clickDrag[i] && i){
-					context.moveTo(clickX[i-1], clickY[i-1]);
-				}else{
-					context.moveTo(clickX[i]-1, clickY[i]);
-				}
-				context.lineTo(clickX[i], clickY[i]);
-				context.closePath();
-				context.stroke();
-			}
-		}
-		*/
 		
 
 	</script>
