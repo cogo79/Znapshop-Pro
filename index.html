@@ -251,7 +251,12 @@
 			}
 			
 		});
-		
+		$('#canvas_ZP').mouseout(function(e){
+			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+				penMouseUp(pos);
+			}
+		});
 		var previosPos;
 		
 		var contextCircle;
