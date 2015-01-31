@@ -34,7 +34,7 @@
 				overflow: auto;
 				float:left;
 			}
-			.canvas_ZP {
+			#canvas_ZP {
 				border: 1px solid black;
 				background-color: white;
 				margin: 5px;
@@ -113,7 +113,7 @@
 		<h1 class="header_ZP" style="margin-bottom: 10px;">Znapshop Pro</h1>
 		<div class="canvasContainer_ZP">
 			<div class="canvasWraper_ZP">
-				<canvas class="canvas_ZP"></canvas>
+				<canvas id="canvas_ZP"></canvas>
 			</div>
 		</div>
 		<div class="toolbar_ZP">
@@ -128,7 +128,7 @@
 			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool width:</h1>
 			<input class="input_ZP" type="range">
 			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool color:</h1>
-			<input class="input_ZP" type="color">
+			<input id="color_ZP" class="input_ZP" type="color">
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_conainter_ZP">
 				<button class="save_drawing_button_ZP" type="button">Save</button>
@@ -151,7 +151,7 @@
 
 		var setCanvasSize = function(height, width) {
 			var margin = 20;
-			$('.canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
+			$('#canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
 			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
 			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
 		};
@@ -216,7 +216,85 @@
 			$('.toolbar_file_list_ZP').append(listItem);
 		};
 		
+		context = document.getElementById('canvas_ZP').getContext("2d");
 		
+		function getMousePos(canvas, evt) {
+		    var rect = canvas.getBoundingClientRect();
+		    return {
+		        x: evt.clientX - rect.left,
+		        y: evt.clientY - rect.top
+		    };
+		}
+		$('#canvas_ZP').mousedown(function(e){
+			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+			console.log("------> mousedown <------ x:" + pos.x + "  y:" + pos.y);
+			var strokeStyle = $('#color_ZP').val();
+			
+		});
+		$('#canvas_ZP').mousemove(function(e){
+			//console.log("mousemove x:" + e.pageX + "  y:" + e.pageY);
+			
+		});
+		$('#canvas_ZP').mouseup(function(e){
+			
+		});
+		
+		var previosPos;
+		var contextStyle = function(strokeStyle,lineJoin,lineWidth) {
+			context.strokeStyle = strokeStyle;
+			context.lineJoin = lineJoin;
+			context.lineWidth = lineWidth;
+		};
+
+		var drawing = false;
+		var penMousuDown = function(pos,strokeStyle,lineJoin,lineWidth) {
+			drawing = true;
+			contextStyle(strokeStyle,lineJoin,lineWidth);
+			previosPos = pos;
+		};
+		var drawLine = function(from, to) {
+			context.beginPath();
+			context.moveTo(from.x, from.y);
+			context.lineTo(to.x, to.y);
+			context.closePath();
+			context.stroke();
+		};
+		var penMouseMove = function(to) {
+			if (drawing) {
+				drawLine(previosPos, to)
+				previosPos = pos;
+			}
+		};
+		var penMouseUp = function(pos) {
+			if (drawing) {
+				drawLine(previosPos, pos)
+				drawing = false;
+			}
+		};
+
+		/*
+		function redraw(){
+			context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+			context.strokeStyle = "#df4b26";
+			context.lineJoin = "round";
+			context.lineWidth = 5;
+
+			for(var i=0; i < clickX.length; i++) {		
+				context.beginPath();
+				if(clickDrag[i] && i){
+					context.moveTo(clickX[i-1], clickY[i-1]);
+				}else{
+					context.moveTo(clickX[i]-1, clickY[i]);
+				}
+				context.lineTo(clickX[i], clickY[i]);
+				context.closePath();
+				context.stroke();
+			}
+		}
+		*/
+		
+
 	</script>
 
 </html>
