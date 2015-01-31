@@ -54,6 +54,9 @@
 				margin-left: 10px;
 				margin-bottom: 0px;
 			}
+			.toolbar_general_font_ZP {
+				font: 12px arial, sans-serif;
+			}
 			.toolbarSubHeader_ZP {
 				font: 12px arial, sans-serif;
 				margin-left: 20px;
@@ -76,6 +79,13 @@
 				margin-top: 0px;
 				width: 200px;
 			}
+			.toolbar_conainter_ZP {
+				margin-left: 10px;
+				margin-bottom: 4px;
+			}
+			.width_container_ZP {
+				margin-left: 20px;
+			}
 
 		</style>
 
@@ -97,14 +107,26 @@
 		<div class="toolbar_ZP">
 			<h1 class="toolbarHeader_ZP">Tool settings</h1>
 			<hr class="toolbarLine_ZP" noshade>
-			<h1 class="toolbarSubHeader_ZP">Current tool:</h1>
+			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Current tool:</h1>
 			<select class="toolbarDropDownMenu_ZP input_ZP">
 				<option value="pen">Pen</option>
 				<option value="brush">Brush</option>
 				<option value="line">Line</option>
 			</select>
-			<h1 class="toolbarSubHeader_ZP">Tool width:</h1>
+			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool width:</h1>
 			<input class="input_ZP" type="range">
+			<h1 class="toolbarSubHeader_ZP toolbar_general_font_ZP">Tool color:</h1>
+			<input class="input_ZP" type="color">
+			<hr class="toolbarLine_ZP" noshade>
+			<div class="toolbar_conainter_ZP">
+				<button class="save_drawing_button_ZP" type="button">Save</button>
+				<button class="new_drawing_button_ZP" type="button">New</button>
+			</div>
+			<hr class="toolbarLine_ZP" noshade>
+			<div class="toolbar_general_font_ZP toolbar_conainter_ZP">
+				Heigth: <span class="height_value_ZP"></span>px <span class="width_container_ZP">Width: <span class="width_value_ZP"></span>px</span>
+			</div>
+			<hr class="toolbarLine_ZP" noshade>
 		</div>
 	</body>
 
@@ -114,6 +136,7 @@
 			var margin = 20;
 			$('.canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
 			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
+			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
 		};
 		setCanvasSize(300,700);
 
