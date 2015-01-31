@@ -233,7 +233,7 @@
 		$('#canvas_ZP').mousedown(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMousuDown(pos, $('#color_ZP').val(), "round", $('#tool_width_input_ZP').val());
+				penMousuDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
 			}
 			
 		});
@@ -268,7 +268,7 @@
 
 		var contextPen = null;
 		var drawing = false;
-		var penMousuDown = function(pos,strokeStyle,lineJoin,lineWidth) {
+		var penMousuDown = function(pos,strokeStyle, lineWidth) {
 			drawing = true;
 			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
 			contextCircle.fillStyle = strokeStyle;
@@ -277,7 +277,6 @@
 
 			contextPen = document.getElementById('canvas_ZP').getContext("2d");
 			contextPen.strokeStyle = strokeStyle;
-			contextPen.lineJoin = lineJoin;
 			contextPen.lineWidth = lineWidth;
 		};
 
