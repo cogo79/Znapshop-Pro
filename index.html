@@ -222,8 +222,6 @@
 			//$('.tool_width_shown_ZP').html($('.tool_width_input_ZP').val());
 		});
 		
-		context = document.getElementById('canvas_ZP').getContext("2d");
-		
 		function getMousePos(canvas, evt) {
 		    var rect = canvas.getBoundingClientRect();
 		    return {
@@ -231,14 +229,11 @@
 		        y: evt.clientY - rect.top
 		    };
 		}
+		
 		$('#canvas_ZP').mousedown(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			var strokeStyle = $('#color_ZP').val();
-			var lineJoin = "round";
-			var lineWidth = $('#tool_width_input_ZP').val();
-			contextStyle(strokeStyle, lineJoin, lineWidth);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMousuDown(pos);
+				penMousuDown(pos, $('#color_ZP').val(), "round", $('#tool_width_input_ZP').val());
 			}
 			
 		});
@@ -258,27 +253,35 @@
 		});
 		
 		var previosPos;
-		var contextStyle = function(strokeStyle,lineJoin,lineWidth) {
-			context.strokeStyle = strokeStyle;
-			//context.lineJoin = lineJoin;
-			context.lineWidth = lineWidth;
+		
+		var contextCircle;
+		var drawCircle = function(pos,diameter) {
+			contextCircle.beginPath();
+			contextCircle.arc(pos.x, pos.y, diameter/2, 0, 2 * Math.PI, true);
+			contextCircle.fill();
 		};
 
+		var contextPen = null;
 		var drawing = false;
 		var penMousuDown = function(pos,strokeStyle,lineJoin,lineWidth) {
 			drawing = true;
-			contextStyle(strokeStyle,lineJoin,lineWidth);
+			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
+			contextCircle.fillStyle = strokeStyle;
+			drawCircle(pos, lineWidth);
 			previosPos = pos;
-			context.beginPath();
-			context.fillRect(pos.x, pos.y ,1,1);
-			context.stroke();
-		};
-		var drawLine = function(from, to) {
-			context.beginPath();
-			context.moveTo(from.x, from.y);
-			context.lineTo(to.x, to.y);
 
-			context.stroke();
+			contextPen = document.getElementById('canvas_ZP').getContext("2d");
+			contextPen.strokeStyle = strokeStyle;
+			contextPen.lineJoin = lineJoin;
+			contextPen.lineWidth = lineWidth;
+		};
+
+		var drawLine = function(from, to) {
+			contextPen.beginPath();
+			contextPen.moveTo(from.x, from.y);
+			contextPen.lineTo(to.x, to.y);
+			contextPen.stroke();
+			drawCircle(to, contextPen.lineWidth);
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
