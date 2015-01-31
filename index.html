@@ -86,6 +86,18 @@
 			.width_container_ZP {
 				margin-left: 20px;
 			}
+			.toolbar_file_list_ZP {
+				margin-top: 6px;
+			}
+			.toolbar_file_list_item_flag_ZP {
+				position: relative;
+				right:33px;
+				color: grey;
+			}
+			.toolbar_file_list_item_name_ZP {
+				position: relative;
+				right: 13px;
+			}
 
 		</style>
 
@@ -127,6 +139,11 @@
 				Heigth: <span class="height_value_ZP"></span>px <span class="width_container_ZP">Width: <span class="width_value_ZP"></span>px</span>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
+			<h1 class="toolbarHeader_ZP">Drawings</h1>
+			<hr class="toolbarLine_ZP" noshade>
+			<ul class="toolbar_file_list_ZP toolbar_general_font_ZP">
+	  			
+			</ul>
 		</div>
 	</body>
 
@@ -192,6 +209,14 @@
 			}
 		});
 		showToolbar();
+
+		var addFileListItem = function(fileName, id) {
+			//'<li><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">Coffee</span></li>'
+			var listItem = '<li id="' + id + '"><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">' + fileName + '</span></li>';
+			$('.toolbar_file_list_ZP').append(listItem);
+		};
+		
+		
 	</script>
 
 </html>
