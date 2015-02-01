@@ -151,9 +151,9 @@
 
 		var setCanvasSize = function(height, width) {
 			var margin = 20;
-			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>'
+			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>';
 			$('.canvasWraper_ZP').html(canvas);
-			$('#canvas_ZP').css({height: height, width:width, margin: (margin/2) - 1 });
+			$('#canvas_ZP').css({margin: (margin/2) - 1 });
 			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
 			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
 		};
@@ -182,7 +182,6 @@
 				left: left(),
 				top: top()
 			});
-
 		});
 		
 
@@ -287,14 +286,14 @@
 			contextCircle.arc(pos.x, pos.y, circleRadius, 0, 2 * Math.PI, true);
 			contextCircle.fill();
 		};
+		var contextLine = null;
 		var drawLine = function(from, to) {
-			contextPen.beginPath();
-			contextPen.moveTo(from.x, from.y);
-			contextPen.lineTo(to.x, to.y);
-			contextPen.stroke();
+			contextLine.beginPath();
+			contextLine.moveTo(from.x, from.y);
+			contextLine.lineTo(to.x, to.y);
+			contextLine.stroke();
 		};
 
-		var contextPen = null;
 		var drawing = false;
 		var penMouseDown = function(pos,strokeStyle, lineWidth) {
 			circleRadius = lineWidth/2;
@@ -304,9 +303,9 @@
 			drawCircle(pos);
 			previosPos = pos;
 
-			contextPen = document.getElementById('canvas_ZP').getContext("2d");
-			contextPen.strokeStyle = strokeStyle;
-			contextPen.lineWidth = lineWidth;
+			contextLine = document.getElementById('canvas_ZP').getContext("2d");
+			contextLine.strokeStyle = strokeStyle;
+			contextLine.lineWidth = lineWidth;
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
@@ -341,14 +340,33 @@
 				drawing = false;
 			}
 		};
+		var startPos;
+		var imageObject;
 		var lineMouseDown = function(pos, strokeStyle, lineWidth) {
-			
+			//var c = document.createElement("CANVAS").getContext("2d");
+			//imageData = c.getImageData(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+			var imageData = document.getElementById('canvas_ZP').toDataURL();
+			imageObject = new Image();
+			imageObject.src = imageData;
+			drawing = true;
+			startPos = pos;
+
+			contextLine = document.getElementById('canvas_ZP').getContext("2d");
+			contextLine.strokeStyle = strokeStyle;
+			contextLine.lineWidth = lineWidth;
 		};
 		var lineMouseMove = function(pos) {
-			
+			if (drawing) {
+				contextLine.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				contextLine.drawImage(imageObject,0,0);
+				drawLine(startPos, pos);
+			}
 		};
 		var lineMouseUp = function(pos) {
-			
+			if (drawing) {
+				lineMouseMove(pos);
+				drawing = false;
+			}
 		};
 
 	</script>
