@@ -233,28 +233,38 @@
 		$('#canvas_ZP').mousedown(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMousuDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+				penMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
 			}
-			
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+				brushMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+			}
 		});
 		$('#canvas_ZP').mousemove(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 				penMouseMove(pos);
 			}
-			
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+				brushMouseMove(pos);
+			}
 		});
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 				penMouseUp(pos);
 			}
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+				brushMouseUp(pos);
+			}
 		});
 		
 		$(function(){
-			$(window).mouseup(function(e){
+			$(window).mouseout(function(e){
 				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 					penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+					brushMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
 				}
 			});
 		});
@@ -262,19 +272,21 @@
 		var previosPos;
 		
 		var contextCircle;
-		var drawCircle = function(pos,diameter) {
+		var circleRadius;
+		var drawCircle = function(pos) {
 			contextCircle.beginPath();
-			contextCircle.arc(pos.x, pos.y, diameter/2, 0, 2 * Math.PI, true);
+			contextCircle.arc(pos.x, pos.y, circleRadius, 0, 2 * Math.PI, true);
 			contextCircle.fill();
 		};
 
 		var contextPen = null;
 		var drawing = false;
-		var penMousuDown = function(pos,strokeStyle, lineWidth) {
+		var penMouseDown = function(pos,strokeStyle, lineWidth) {
+			circleRadius = lineWidth/2;
 			drawing = true;
 			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
 			contextCircle.fillStyle = strokeStyle;
-			drawCircle(pos, lineWidth);
+			drawCircle(pos);
 			previosPos = pos;
 
 			contextPen = document.getElementById('canvas_ZP').getContext("2d");
@@ -287,23 +299,40 @@
 			contextPen.moveTo(from.x, from.y);
 			contextPen.lineTo(to.x, to.y);
 			contextPen.stroke();
-			drawCircle(to, contextPen.lineWidth);
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
 				drawLine(previosPos, to)
+				drawCircle(to);
 				previosPos = to;
 			}
 		};
 		var penMouseUp = function(pos) {
 			if (drawing) {
 				drawLine(previosPos, pos)
+				drawCircle(pos);
 				drawing = false;
 
 			}
 		};
-
-		
+		var brushMouseDown = function(pos, strokeStyle, lineWidth) {
+			circleRadius = lineWidth/2;
+			drawing = true;
+			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
+			contextCircle.fillStyle = strokeStyle;
+			drawCircle(pos);
+		};
+		brushMouseMove = function(pos) {
+			if (drawing) {
+				drawCircle(pos);
+			}
+		};
+		brushMouseUp = function(pos) {
+			if (drawing) {
+				drawCircle(pos);
+				drawing = false;
+			}
+		};
 
 	</script>
 
