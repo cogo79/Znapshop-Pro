@@ -340,16 +340,20 @@
 				drawing = false;
 			}
 		};
-		var startPos;
-		var imageObject;
+		
+		var lineToolSettings = {
+			startPos : {},
+			imageObject : null
+		};
 		var lineMouseDown = function(pos, strokeStyle, lineWidth) {
 			//var c = document.createElement("CANVAS").getContext("2d");
 			//imageData = c.getImageData(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 			var imageData = document.getElementById('canvas_ZP').toDataURL();
-			imageObject = new Image();
+			var imageObject = new Image();
 			imageObject.src = imageData;
+			lineToolSettings.imageObject = imageObject;
+			lineToolSettings.startPos = pos;
 			drawing = true;
-			startPos = pos;
 
 			contextLine = document.getElementById('canvas_ZP').getContext("2d");
 			contextLine.strokeStyle = strokeStyle;
@@ -358,8 +362,9 @@
 		var lineMouseMove = function(pos) {
 			if (drawing) {
 				contextLine.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				contextLine.drawImage(imageObject,0,0);
-				drawLine(startPos, pos);
+				console.log(lineToolSettings);
+				contextLine.drawImage(lineToolSettings.imageObject,0,0);
+				drawLine(lineToolSettings.startPos, pos);
 			}
 		};
 		var lineMouseUp = function(pos) {
