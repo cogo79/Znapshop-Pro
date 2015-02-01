@@ -241,6 +241,8 @@
 		    };
 		}
 		
+		var ctx = document.getElementById('canvas_ZP').getContext("2d");
+
 		$('#canvas_ZP').mousedown(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
@@ -276,7 +278,7 @@
 			},
 			undo : function() {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				contextLine.drawImage(lineToolSettings.imageObject,0,0);
+				ctx.drawImage(lineToolSettings.imageObject,0,0);
 			},
 			redo : function() {
 
@@ -311,33 +313,29 @@
 		
 		var previosPos;
 		
-		var contextCircle;
 		var circleRadius;
 		var drawCircle = function(pos) {
-			contextCircle.beginPath();
-			contextCircle.arc(pos.x, pos.y, circleRadius, 0, 2 * Math.PI, true);
-			contextCircle.fill();
+			ctx.beginPath();
+			ctx.arc(pos.x, pos.y, circleRadius, 0, 2 * Math.PI, true);
+			ctx.fill();
 		};
-		var contextLine = null;
 		var drawLine = function(from, to) {
-			contextLine.beginPath();
-			contextLine.moveTo(from.x, from.y);
-			contextLine.lineTo(to.x, to.y);
-			contextLine.stroke();
+			ctx.beginPath();
+			ctx.moveTo(from.x, from.y);
+			ctx.lineTo(to.x, to.y);
+			ctx.stroke();
 		};
 
 		var drawing = false;
 		var penMouseDown = function(pos,strokeStyle, lineWidth) {
 			circleRadius = lineWidth/2;
 			drawing = true;
-			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
-			contextCircle.fillStyle = strokeStyle;
+			ctx.fillStyle = strokeStyle;
 			drawCircle(pos);
 			previosPos = pos;
 
-			contextLine = document.getElementById('canvas_ZP').getContext("2d");
-			contextLine.strokeStyle = strokeStyle;
-			contextLine.lineWidth = lineWidth;
+			ctx.strokeStyle = strokeStyle;
+			ctx.lineWidth = lineWidth;
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
@@ -357,8 +355,8 @@
 		var brushMouseDown = function(pos, strokeStyle, lineWidth) {
 			circleRadius = lineWidth/2;
 			drawing = true;
-			contextCircle = document.getElementById('canvas_ZP').getContext("2d");
-			contextCircle.fillStyle = strokeStyle;
+
+			ctx.fillStyle = strokeStyle;
 			drawCircle(pos);
 		};
 		var brushMouseMove = function(pos) {
@@ -387,14 +385,13 @@
 			lineToolSettings.startPos = pos;
 			drawing = true;
 
-			contextLine = document.getElementById('canvas_ZP').getContext("2d");
-			contextLine.strokeStyle = strokeStyle;
-			contextLine.lineWidth = lineWidth;
+			ctx.strokeStyle = strokeStyle;
+			ctx.lineWidth = lineWidth;
 		};
 		var lineMouseMove = function(pos) {
 			if (drawing) {
-				contextLine.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				contextLine.drawImage(lineToolSettings.imageObject,0,0);
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				ctx.drawImage(lineToolSettings.imageObject,0,0);
 				drawLine(lineToolSettings.startPos, pos);
 			}
 		};
