@@ -238,6 +238,9 @@
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 				brushMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
 			}
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+				lineMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+			}
 		});
 		$('#canvas_ZP').mousemove(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
@@ -247,6 +250,9 @@
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 				brushMouseMove(pos);
 			}
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+				lineMouseMove(pos);
+			}
 		});
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
@@ -255,6 +261,9 @@
 			}
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 				brushMouseUp(pos);
+			}
+			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+				lineMouseUp(pos);
 			}
 		});
 		
@@ -278,6 +287,12 @@
 			contextCircle.arc(pos.x, pos.y, circleRadius, 0, 2 * Math.PI, true);
 			contextCircle.fill();
 		};
+		var drawLine = function(from, to) {
+			contextPen.beginPath();
+			contextPen.moveTo(from.x, from.y);
+			contextPen.lineTo(to.x, to.y);
+			contextPen.stroke();
+		};
 
 		var contextPen = null;
 		var drawing = false;
@@ -292,13 +307,6 @@
 			contextPen = document.getElementById('canvas_ZP').getContext("2d");
 			contextPen.strokeStyle = strokeStyle;
 			contextPen.lineWidth = lineWidth;
-		};
-
-		var drawLine = function(from, to) {
-			contextPen.beginPath();
-			contextPen.moveTo(from.x, from.y);
-			contextPen.lineTo(to.x, to.y);
-			contextPen.stroke();
 		};
 		var penMouseMove = function(to) {
 			if (drawing) {
@@ -322,16 +330,25 @@
 			contextCircle.fillStyle = strokeStyle;
 			drawCircle(pos);
 		};
-		brushMouseMove = function(pos) {
+		var brushMouseMove = function(pos) {
 			if (drawing) {
 				drawCircle(pos);
 			}
 		};
-		brushMouseUp = function(pos) {
+		var brushMouseUp = function(pos) {
 			if (drawing) {
 				drawCircle(pos);
 				drawing = false;
 			}
+		};
+		var lineMouseDown = function(pos, strokeStyle, lineWidth) {
+			
+		};
+		var lineMouseMove = function(pos) {
+			
+		};
+		var lineMouseUp = function(pos) {
+			
 		};
 
 	</script>
