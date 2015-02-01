@@ -81,7 +81,9 @@
 			}
 			.toolbar_conainter_ZP {
 				margin-left: 10px;
+				margin-right: 10px;
 				margin-bottom: 4px;
+				height: 18px;
 			}
 			.width_container_ZP {
 				margin-left: 20px;
@@ -97,6 +99,14 @@
 			.toolbar_file_list_item_name_ZP {
 				position: relative;
 				right: 13px;
+			}
+			.button_float_left_ZP {
+				float:left;
+				margin-right: 4px;
+			}
+			.button_float_right_ZP {
+				float: right;
+				margin-left: 4px;
 			}
 
 		</style>
@@ -131,8 +141,10 @@
 			<input id="color_ZP" class="input_ZP" type="color">
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_conainter_ZP">
-				<button class="save_drawing_button_ZP" type="button">Save</button>
-				<button class="new_drawing_button_ZP" type="button">New</button>
+				<button class="save_drawing_button_ZP button_float_left_ZP" type="button">Save</button>
+				<button class="new_drawing_button_ZP button_float_left_ZP" type="button">New</button>
+				<button class="redo_button_ZP button_float_right_ZP" type="button">Redo</button>
+				<button class="undo_button_ZP button_float_right_ZP" type="button">Undo</button>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_general_font_ZP toolbar_conainter_ZP">
@@ -253,16 +265,36 @@
 				lineMouseMove(pos);
 			}
 		});
+		var log = {
+			index : 0,
+			imageObjectsArray : [],
+			log : function() {
+				var imageData = document.getElementById('canvas_ZP').toDataURL();
+				var imageObject = new Image();
+				imageObject.src = imageData;
+				this.imageObjectsArray.push(imageObject);
+			},
+			undo : function() {
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				contextLine.drawImage(lineToolSettings.imageObject,0,0);
+			},
+			redo : function() {
+
+			}
+		};
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 				penMouseUp(pos);
+				log.log();
 			}
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 				brushMouseUp(pos);
+				log.log();
 			}
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
 				lineMouseUp(pos);
+				log.log();
 			}
 		});
 		
@@ -362,7 +394,6 @@
 		var lineMouseMove = function(pos) {
 			if (drawing) {
 				contextLine.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				console.log(lineToolSettings);
 				contextLine.drawImage(lineToolSettings.imageObject,0,0);
 				drawLine(lineToolSettings.startPos, pos);
 			}
