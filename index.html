@@ -249,14 +249,16 @@
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 				penMouseUp(pos);
 			}
-			
 		});
-		$('#canvas_ZP').mouseout(function(e){
-			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMouseUp(pos);
-			}
+		
+		$(function(){
+			$(window).mouseup(function(e){
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+					penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
+				}
+			});
 		});
+		
 		var previosPos;
 		
 		var contextCircle;
