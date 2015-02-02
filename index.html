@@ -269,25 +269,46 @@
 				lineMouseMove(pos);
 			}
 		});
-		var imageLogBook = {
-			id : null,
-			index : 0,
-			imageObjectsArray : [],
-			logUserAction : function() {
-				var imageData = document.getElementById('canvas_ZP').toDataURL();
-				var imageObject = new Image();
-				imageObject.src = imageData;
-				this.imageObjectsArray.push(imageObject);
-			},
-			undo : function() {
+		var DrawingLogBook = function(drawingId) {
+			this.drawingId = drawingId;
+			this.index = 0;
+			this.logs = [];
+		};
+		DrawLogBook.prototype.sliceAndPush = function(imageObject) {
+			var array;
+			if (this.index == this.logs.length-1) {
+				this.logs.push(imageObject);
+				array = this.logs;
+			} else {
+				var tempArray = this.logs.slice(0, this.index+1);
+				tempArray.push(imageObject);
+				array = tempArray;
+			}
+			this.index++;
+			return array;
+		};
+		DrawLogBook.prototype.logUserAction = function() {
+			var imageData = document.getElementById('canvas_ZP').toDataURL();
+			var imageObject = new Image();
+			imageObject.src = imageData;
+			this.logs = DrawLogBook.sliceAndPush();
+		};
+		DrawLogBook.prototype.undo = function() {
+			if (this.index > 0) {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				ctx.drawImage(imageObjectsArray[0],0,0);
-			},
-			redo : function() {
-
+				this.index--;
+				ctx.drawImage(this.logs[this.index],0,0);
 			}
 		};
-		var imageLogBookArray = [];
+		DrawLogBook.prototype.redo = function() {
+			if (this.index < this.logs-1) {
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				this.index++;
+				ctx.drawImage(this.logs[this.index],0,0);
+			}
+		};
+		var drawingLogBookArray = [];
+		
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
