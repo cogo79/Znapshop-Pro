@@ -274,7 +274,7 @@
 			this.index = 0;
 			this.logs = [];
 		};
-		DrawLogBook.prototype.sliceAndPush = function(imageObject) {
+		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
 			if (this.index == this.logs.length-1) {
 				this.logs.push(imageObject);
@@ -287,20 +287,20 @@
 			this.index++;
 			return array;
 		};
-		DrawLogBook.prototype.logUserAction = function() {
+		DrawingLogBook.prototype.logUserAction = function() {
 			var imageData = document.getElementById('canvas_ZP').toDataURL();
 			var imageObject = new Image();
 			imageObject.src = imageData;
 			this.logs = DrawLogBook.sliceAndPush();
 		};
-		DrawLogBook.prototype.undo = function() {
+		DrawingLogBook.prototype.undo = function() {
 			if (this.index > 0) {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index--;
 				ctx.drawImage(this.logs[this.index],0,0);
 			}
 		};
-		DrawLogBook.prototype.redo = function() {
+		DrawingLogBook.prototype.redo = function() {
 			if (this.index < this.logs-1) {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index++;
