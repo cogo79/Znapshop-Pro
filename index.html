@@ -56,6 +56,10 @@
 			}
 			.toolbar_general_font_ZP {
 				font: 12px arial, sans-serif;
+				margin-left: 10px;
+				margin-right: 10px;
+				margin-bottom: 4px;
+				height: 14px;
 			}
 			.toolbarSubHeader_ZP {
 				font: 12px arial, sans-serif;
@@ -147,7 +151,7 @@
 				<button class="undo_button_ZP button_float_right_ZP" type="button">Undo</button>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
-			<div class="toolbar_general_font_ZP toolbar_conainter_ZP">
+			<div class="toolbar_general_font_ZP">
 				Heigth: <span class="height_value_ZP"></span>px <span class="width_container_ZP">Width: <span class="width_value_ZP"></span>px</span>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
@@ -267,10 +271,11 @@
 				lineMouseMove(pos);
 			}
 		});
-		var log = {
+		var imageLogBook = {
+			id : null,
 			index : 0,
 			imageObjectsArray : [],
-			log : function() {
+			logUserAction : function() {
 				var imageData = document.getElementById('canvas_ZP').toDataURL();
 				var imageObject = new Image();
 				imageObject.src = imageData;
@@ -278,12 +283,13 @@
 			},
 			undo : function() {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				ctx.drawImage(lineToolSettings.imageObject,0,0);
+				ctx.drawImage(imageObjectsArray[0],0,0);
 			},
 			redo : function() {
 
 			}
 		};
+		var imageLogBookArray = [];
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
