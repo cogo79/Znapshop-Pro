@@ -276,6 +276,7 @@
 		};
 		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
+			
 			if (this.index == this.logs.length-1) {
 				this.logs.push(imageObject);
 				array = this.logs;
@@ -289,15 +290,20 @@
 		};
 		DrawingLogBook.prototype.logUserAction = function() {
 			var imageData = document.getElementById('canvas_ZP').toDataURL();
-			var imageObject = new Image();
-			imageObject.src = imageData;
-			this.logs = DrawLogBook.sliceAndPush();
+			this.logs = this.sliceAndPush(imageData);
+			console.log("logs: " + this.logs);
+			console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.undo = function() {
+			console.log("undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
+			//console.log("undo() this.index: " + this.index);
 			if (this.index > 0) {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index--;
-				ctx.drawImage(this.logs[this.index],0,0);
+				var image = new Image();
+				image.src = this.logs[this.index];
+				console.log("undo: " + image);
+				ctx.drawImage(image, 0, 0);
 			}
 		};
 		DrawingLogBook.prototype.redo = function() {
@@ -309,20 +315,28 @@
 		};
 		var drawingLogBookArray = [];
 		
+		var drawingLogBook = new DrawingLogBook();
+		//$('.undo_button_ZP').click(drawingLogBook.undo);
+		
+		$('.undo_button_ZP').click(function() {
+			console.log("???");
+			drawingLogBook.undo();
+		});
+
+		$('.redo_button_ZP').click(drawingLogBook.redo);
+
 		$('#canvas_ZP').mouseup(function(e){
 			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
 				penMouseUp(pos);
-				
 			}
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 				brushMouseUp(pos);
-				
 			}
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
 				lineMouseUp(pos);
-				
 			}
+			drawingLogBook.logUserAction();
 		});
 		
 		$(function(){
