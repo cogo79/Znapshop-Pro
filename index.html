@@ -273,6 +273,7 @@
 			this.drawingId = drawingId;
 			this.index = 0;
 			this.logs = [];
+			this.redoGoToIndexOne = false;
 		};
 		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
@@ -322,15 +323,24 @@
 			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
-			if (this.index < this.logs.length-1) {
-				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+			if (this.logs.length == 0) {
+				return;
+			}
+			if (this.index == 0 && this.redoGoToIndexOne == false) {
 				var image = new Image();
 				image.src = this.logs[this.index];
 				ctx.drawImage(image,0,0);
+				this.redoGoToIndexOne = true;
+				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
+			} else if (this.index < this.logs.length-1) {
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index++;
+				var image = new Image();
+				image.src = this.logs[this.index];
+				ctx.drawImage(image,0,0);
+				this.redoGoToIndexOne = false;
 				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
 			}
-
 		};
 		var drawingLogBookArray = [];
 		
