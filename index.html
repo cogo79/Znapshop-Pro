@@ -277,33 +277,26 @@
 		};
 		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
-			
-			if (this.index == 0 && this.logs.length == 0) {
-				this.logs.push(imageObject);
-				array = this.logs;
-			} else if (this.index == 0 && this.logs.length == 1) {
-				this.logs.push(imageObject);
-				array = this.logs;
-				this.index++;
-			} else if (this.index == 0 && this.logs.length > 1) {
-				while (this.logs.length > 0) {
+			/*
+			if (this.index == 0 && this.logs.length > 2) {
+				while (this.logs.length > 1) {
 					this.logs.pop();
 				}
 				console.log("after while loop. this.logs.length:" + this.logs.length);
 				this.logs.push(imageObject);
 				array = this.logs;
-			}  else if (this.index == this.logs.length-1 && this.logs.length > 1) {
+			}  else*/ if (this.index == this.logs.length-1 /*&& this.logs.length > 1*/) {
 				this.logs.push(imageObject);
 				array = this.logs;
-				this.index++;
 			} else {
 				console.log("slice");
 				var tempArray = this.logs.slice(0, this.index+1);
 				tempArray.push(imageObject);
 				array = tempArray;
+			}
+			if (array.length > 1) {
 				this.index++;
 			}
-
 			return array;
 		};
 		DrawingLogBook.prototype.logDrawing = function() {
@@ -323,16 +316,7 @@
 			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
-			if (this.logs.length == 0) {
-				return;
-			}
-			if (this.index == 0 && this.redoGoToIndexOne == false) {
-				var image = new Image();
-				image.src = this.logs[this.index];
-				ctx.drawImage(image,0,0);
-				this.redoGoToIndexOne = true;
-				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
-			} else if (this.index < this.logs.length-1) {
+			if (this.index < this.logs.length-1) {
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index++;
 				var image = new Image();
@@ -345,6 +329,7 @@
 		var drawingLogBookArray = [];
 		
 		var drawingLogBook = new DrawingLogBook();
+		drawingLogBook.logDrawing();
 		
 		$('.undo_button_ZP').click(function() {
 			drawingLogBook.undo();
