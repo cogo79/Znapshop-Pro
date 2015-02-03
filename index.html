@@ -277,34 +277,49 @@
 		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
 			
-			if (this.index == this.logs.length-1) {
+			if (this.index == 0 && this.logs.length == 0) {
 				this.logs.push(imageObject);
 				array = this.logs;
+			} else if (this.index == 0 && this.logs.length == 1) {
+				this.logs.push(imageObject);
+				array = this.logs;
+				this.index++;
+			} else if (this.index == 0 && this.logs.length > 1) {
+				while (this.logs.length > 0) {
+					this.logs.pop();
+				}
+				console.log("after while loop. this.logs.length:" + this.logs.length);
+				this.logs.push(imageObject);
+				array = this.logs;
+			}  else if (this.index == this.logs.length-1 && this.logs.length > 1) {
+				this.logs.push(imageObject);
+				array = this.logs;
+				this.index++;
 			} else {
+				console.log("slice");
 				var tempArray = this.logs.slice(0, this.index+1);
 				tempArray.push(imageObject);
 				array = tempArray;
+				this.index++;
 			}
-			this.index++;
+
 			return array;
 		};
-		DrawingLogBook.prototype.logUserAction = function() {
+		DrawingLogBook.prototype.logDrawing = function() {
 			var imageData = document.getElementById('canvas_ZP').toDataURL();
 			this.logs = this.sliceAndPush(imageData);
-			console.log("logs: " + this.logs);
 			console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.undo = function() {
-			console.log("undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 			//console.log("undo() this.index: " + this.index);
+			ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 			if (this.index > 0) {
-				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				this.index--;
 				var image = new Image();
 				image.src = this.logs[this.index];
-				console.log("undo: " + image);
 				ctx.drawImage(image, 0, 0);
 			}
+			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
 			if (this.index < this.logs-1) {
@@ -316,10 +331,8 @@
 		var drawingLogBookArray = [];
 		
 		var drawingLogBook = new DrawingLogBook();
-		//$('.undo_button_ZP').click(drawingLogBook.undo);
 		
 		$('.undo_button_ZP').click(function() {
-			console.log("???");
 			drawingLogBook.undo();
 		});
 
@@ -336,7 +349,7 @@
 			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
 				lineMouseUp(pos);
 			}
-			drawingLogBook.logUserAction();
+			drawingLogBook.logDrawing();
 		});
 		
 		$(function(){
