@@ -162,6 +162,10 @@
 	</body>
 
 	<script type="text/javascript">
+		var isFirefox = typeof InstallTrigger !== 'undefined';
+		if (isFirefox) {
+			console.log("Current browser is Firefox");
+		}
 
 		var setCanvasSize = function(height, width) {
 			var margin = 20;
@@ -291,22 +295,28 @@
 			return array;
 		};
 		DrawingLogBook.prototype.logDrawing = function() {
-			var imageData = document.getElementById('canvas_ZP').toDataURL();
-			this.logs = this.sliceAndPush(imageData);
-			console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
+			if (isFirefox) {
+				var image = new Image();
+				image.src = document.getElementById('canvas_ZP').toDataURL();
+				this.logs = this.sliceAndPush(image);
+				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
+			} else {
+				var imageData = document.getElementById('canvas_ZP').toDataURL();
+				this.logs = this.sliceAndPush(imageData);
+				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
+			}
+			
 		};
 
 		DrawingLogBook.prototype.undo = function() {
 			//console.log("undo() this.index: " + this.index);
 
-			if (typeof InstallTrigger !== 'undefined') {
-				console.log("Current browser is Firefox");
+			if (isFirefox) {
 
 				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 				if (this.index > 0) {
 					this.index--;
-					var image = new Image();
-					image.src = this.logs[this.index];
+					var image = this.logs[this.index];
 					ctx.drawImage(image, 0, 0);
 				}
 
@@ -323,13 +333,23 @@
 			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
-			if (this.index < this.logs.length-1) {
-				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				this.index++;
-				var image = new Image();
-				image.src = this.logs[this.index];
-				ctx.drawImage(image,0,0);
-				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
+			if (isFirefox) {
+					if (this.index < this.logs.length-1) {
+					ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+					this.index++;
+					var image = this.logs[this.index];
+					ctx.drawImage(image,0,0);
+					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
+				}
+			} else {
+				if (this.index < this.logs.length-1) {
+					ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+					this.index++;
+					var image = new Image();
+					image.src = this.logs[this.index];
+					ctx.drawImage(image,0,0);
+					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
+				}
 			}
 		};
 		var drawingLogBookArray = [];
