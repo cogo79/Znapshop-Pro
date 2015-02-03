@@ -273,19 +273,10 @@
 			this.drawingId = drawingId;
 			this.index = 0;
 			this.logs = [];
-			this.redoGoToIndexOne = false;
 		};
 		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
-			/*
-			if (this.index == 0 && this.logs.length > 2) {
-				while (this.logs.length > 1) {
-					this.logs.pop();
-				}
-				console.log("after while loop. this.logs.length:" + this.logs.length);
-				this.logs.push(imageObject);
-				array = this.logs;
-			}  else*/ if (this.index == this.logs.length-1 /*&& this.logs.length > 1*/) {
+			if (this.index == this.logs.length-1 /*&& this.logs.length > 1*/) {
 				this.logs.push(imageObject);
 				array = this.logs;
 			} else {
@@ -304,15 +295,31 @@
 			this.logs = this.sliceAndPush(imageData);
 			console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
+
 		DrawingLogBook.prototype.undo = function() {
 			//console.log("undo() this.index: " + this.index);
-			ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-			if (this.index > 0) {
-				this.index--;
-				var image = new Image();
-				image.src = this.logs[this.index];
-				ctx.drawImage(image, 0, 0);
+
+			if (typeof InstallTrigger !== 'undefined') {
+				console.log("Current browser is Firefox");
+
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				if (this.index > 0) {
+					this.index--;
+					var image = new Image();
+					image.src = this.logs[this.index];
+					ctx.drawImage(image, 0, 0);
+				}
+
+			} else {
+				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+				if (this.index > 0) {
+					this.index--;
+					var image = new Image();
+					image.src = this.logs[this.index];
+					ctx.drawImage(image, 0, 0);
+				}
 			}
+			
 			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
@@ -322,7 +329,6 @@
 				var image = new Image();
 				image.src = this.logs[this.index];
 				ctx.drawImage(image,0,0);
-				this.redoGoToIndexOne = false;
 				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
 			}
 		};
