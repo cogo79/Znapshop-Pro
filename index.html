@@ -108,7 +108,7 @@
 			}
 			.darknes_ZP {
 				position: absolute; left:0px; top:0px; width:100%; height:100%;
-				background-color: rgba(0,0,0,0.3);
+				background-color: rgba(0,0,0,0.7);
 			}
 			.alertView_contianer_ZP {
 				background-color: white; width: 280px; height: 180px; padding: 10px;
@@ -172,9 +172,9 @@
 	  			
 			</ul>
 		</div>
-		<div class="darknes_ZP">
-			<div class="alertView_contianer_ZP">
-				<div class="new_image_alertView_ZP">
+		<div class="darknes_ZP" style="display: none;">
+			<div class="alertView_contianer_ZP" style="display: none;">
+				<div class="new_image_alertView_ZP" style="display: none;">
 					New imgage
 					Height:<br>
 					<input type="text" name="height">
@@ -182,8 +182,8 @@
 					Width:<br>
 					<input type="text" name="width">
 					<br><br>
-					<input type="button" value="OK" class="new_drawing_ZP">
-					<input type="button" value="Cancel" class="cancel_new_drawing_alert_ZP">
+					<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
+					<input type="button" value="Cancel" class="alertView_cancel_ZP">
 				</div>
 			</div>
 		</div>
@@ -511,11 +511,30 @@
 		};
 
 		$('.new_drawing_button_ZP').click(function() {
+			showNewImageAlertView();
+		});
+
+		$('.alertView_new_drawing_button_ZP').click(function() {
 			console.log("New button");
+		});
+		$('.alertView_cancel_ZP').click(function() {
+			close_alert();
 		});
 		var new_drawing_ZP = function() {
 			console.log("New drawing ;D");
 		};
+
+		var showNewImageAlertView = function() {
+			$('.darknes_ZP').show();
+			$('.alertView_contianer_ZP').show();
+			$('.new_image_alertView_ZP').show();
+		};
+		var close_alert = function() {
+			$('.darknes_ZP').hide();
+			$('.alertView_contianer_ZP').hide();
+			$('.new_image_alertView_ZP').hide();
+		};
+		
 	</script>
 
 </html>
