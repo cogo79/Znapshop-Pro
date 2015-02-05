@@ -97,14 +97,19 @@
 			.toolbar_file_list_ZP {
 				margin-top: 6px;
 			}
+			.toolbar_file_list_item_ZP {
+				margin-bottom: 6px; 
+				padding: 5px;
+				cursor:pointer;
+				border-radius: 8px;
+				border: black solid 1px;
+			}
 			.toolbar_file_list_item_flag_ZP {
-				position: relative;
-				right:33px;
+				margin-left: 14px;
 				color: grey;
 			}
 			.toolbar_file_list_item_name_ZP {
-				position: relative;
-				right: 13px;
+				margin-left: 5px;
 			}
 			.darknes_ZP {
 				position: absolute; left:0px; top:0px; width:100%; height:100%;
@@ -168,9 +173,9 @@
 			<hr class="toolbarLine_ZP" noshade>
 			<h1 class="toolbarHeader_ZP">Drawings</h1>
 			<hr class="toolbarLine_ZP" noshade>
-			<ul class="toolbar_file_list_ZP toolbar_general_font_ZP">
+			<div class="toolbar_file_list_ZP toolbar_general_font_ZP">
 	  			
-			</ul>
+			</div>
 		</div>
 		<div class="darknes_ZP" style="display: none;">
 			<div class="alertView_contianer_ZP" style="display: none;">
@@ -302,6 +307,7 @@
 				top: top()
 			});
 		};
+		var newUniqueClientSessionIDForDrawing = 0;
 		var newDrawing = function(width, height, name) {
 			var margin = 20;
 			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>';
@@ -309,23 +315,22 @@
 			$('#canvas_ZP').css({margin: (margin/2) - 1 });
 			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
 			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
-			var getNewUniqueClientSessionIDForDrawing = (function () {
-	      		var c = 0;
-	      		return function () {
-	      			return "d" + ++c;
-	      		}
-	    	})();
-			var id = getNewUniqueClientSessionIDForDrawing();
+			var id = "d" + ++newUniqueClientSessionIDForDrawing;
 			if (!name) {
 				name = "untitled";
 			}
-			var listItem = '<li id="' + id + '"><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">' + name + '</span></li>';
+			var listItem = '<div id="' + id + '" class="toolbar_file_list_item_ZP"><span class="toolbar_file_list_item_name_ZP">' + name + '</span><span class="toolbar_file_list_item_flag_ZP">ns</span></div>';
 			$('.toolbar_file_list_ZP').append(listItem);
-			
-			
+			console.log("New id: " + id);
+			$('#'+id).click(function() {
+				$('.toolbar_file_list_item_ZP').css({'background-color': 'white'});
+				$(this).css({'background-color': '#F5F2F5'});
+			});
 			$(window).trigger('resize');
 			currentLogBook = new DrawingLogBook(id, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 			drawingLogBookArray.push(currentLogBook);
+			
+			
 			prepareCanvas();
 		};
 		newDrawing(200,100,"untitled");
@@ -549,10 +554,14 @@
 			$('.new_image_alertView_ZP').show();
 		};
 		var close_alert = function() {
+			$('#drawing_name_input_ZP').val("");
+			$('#drawing_width_input_ZP').val("500");
+			$('#drawing_height_input_ZP').val("300");
 			$('.darknes_ZP').hide();
 			$('.alertView_contianer_ZP').hide();
 			$('.new_image_alertView_ZP').hide();
 		};
+		close_alert();
 
 
 	</script>
