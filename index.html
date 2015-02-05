@@ -175,12 +175,13 @@
 		<div class="darknes_ZP" style="display: none;">
 			<div class="alertView_contianer_ZP" style="display: none;">
 				<div class="new_image_alertView_ZP" style="display: none;">
-					New imgage
-					Height:<br>
-					<input type="text" name="height">
+					New imgage<br>
+					Name: <input id="drawing_name_input_ZP" type="text" name="height"><br>
+					Height:
+					<input id="drawing_height_input_ZP" type="text" pattern="[0-9]{10}" name="height">
 					<br>
-					Width:<br>
-					<input type="text" name="width">
+					Width:
+					<input id="drawing_width_input_ZP" type="number" min="0" step="1" name="width">
 					<br><br>
 					<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
 					<input type="button" value="Cancel" class="alertView_cancel_ZP">
@@ -195,18 +196,95 @@
 			console.log("Current browser is Firefox");
 		}
 
-		var setCanvasSize = function(height, width) {
-			var margin = 20;
-			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>';
-			$('.canvasWraper_ZP').html(canvas);
-			$('#canvas_ZP').css({margin: (margin/2) - 1 });
-			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
-			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
+		var DrawingLogBook = function(drawingId, width, height) {
+			this.drawingId = drawingId;
+			this.width = width; this.height = height;
+			this.index = 0;
+			this.logs = [];
 		};
-		setCanvasSize(100,200);
+		var drawingLogBookArray = []; var currentLogBook;
 
-		$(window).resize(function(){
+		function sliceAndPush (imageObject) {
+			var array;
+			if (currentLogBook.index == currentLogBook.logs.length-1) {
+				currentLogBook.logs.push(imageObject);
+				array = currentLogBook.logs;
+			} else {
+				console.log("slice");
+				var tempArray = currentLogBook.logs.slice(0, currentLogBook.index+1);
+				tempArray.push(imageObject);
+				array = tempArray;
+			}
+			if (array.length > 1) {
+				currentLogBook.index++;
+			}
+			return array;
+		};
+		function logDrawing() { 
+			console.log("logDrawing");
+			if (isFirefox) {
+				var image = new Image();
+				image.src = document.getElementById('canvas_ZP').toDataURL();
+				currentLogBook.logs = sliceAndPush(image);
+				console.log("sliceAndPush() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+			} else {
+				var imageData = document.getElementById('canvas_ZP').toDataURL();
+				currentLogBook.logs = sliceAndPush(imageData);
+				console.log("sliceAndPush() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+			}
+			
+		};
 
+		function undo() {
+			//console.log("undo() this.index: " + this.index);
+			if (isFirefox) {
+
+				ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
+				if (currentLogBook.index > 0) {
+					currentLogBook.index--;
+					var image = currentLogBook.logs[currentLogBook.index];
+					ctx.drawImage(image, 0, 0);
+				}
+
+			} else {
+				ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
+				if (currentLogBook.index > 0) {
+					currentLogBook.index--;
+					var image = new Image();
+					image.src = currentLogBook.logs[currentLogBook.index];
+					ctx.drawImage(image, 0, 0);
+				}
+			}
+			
+			console.log("after undo() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+		};
+		function redo() {
+			if (isFirefox) {
+					if (currentLogBook.index < currentLogBook.logs.length-1) {
+					ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
+					currentLogBook.index++;
+					var image = currentLogBook.logs[currentLogBook.index];
+					ctx.drawImage(image,0,0);
+					console.log("redo() this.logs.length: " + currentLogBook.logs.length + "    this.index: " + currentLogBook.index);
+				}
+			} else {
+				if (currentLogBook.index < currentLogBook.logs.length-1) {
+					ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
+					currentLogBook.index++;
+					var image = new Image();
+					image.src = currentLogBook.logs[currentLogBook.index];
+					ctx.drawImage(image,0,0);
+					console.log("redo() this.logs.length: " + currentLogBook.logs.length + "    this.index: " + currentLogBook.index);
+				}
+			}
+		};
+
+		var addFileListItem = function(fileName, id) {
+			//'<li><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">Coffee</span></li>'
+			
+		};
+
+		var resize = function(){
 			var left = function() {
 				if( $('.canvasWraper_ZP').outerWidth() > $('.canvasContainer_ZP').width() ) {
 					return 0;
@@ -214,7 +292,6 @@
 					return ($('.canvasContainer_ZP').width() - $('.canvasWraper_ZP').outerWidth()) / 2;
 				}
 			};
-
 			var top = function() {
 				if( $('.canvasWraper_ZP').outerHeight() > $('.canvasContainer_ZP').height() ) {
 					return 0;
@@ -222,14 +299,42 @@
 					return ($('.canvasContainer_ZP').height() - $('.canvasWraper_ZP').outerHeight()) / 2;
 				}
 			};
-
 			$('.canvasWraper_ZP').css({
 				position:'relative',
 				left: left(),
 				top: top()
 			});
-		});
-		
+		};
+		var newDrawing = function(width, height, name) {
+			var margin = 20;
+			var canvas = '<canvas id="canvas_ZP" width="' + width + '" height="' + height + '"></canvas>';
+			$('.canvasWraper_ZP').html(canvas);
+			$('#canvas_ZP').css({margin: (margin/2) - 1 });
+			$('.canvasWraper_ZP').css({height: height+margin, width:width+margin});
+			$('.height_value_ZP').html(height); $('.width_value_ZP').html(width);
+			var getNewUniqueClientSessionIDForDrawing = (function () {
+	      		var c = 0;
+	      		return function () {
+	      			return "d" + ++c;
+	      		}
+	    	})();
+			var id = getNewUniqueClientSessionIDForDrawing();
+			if (!name) {
+				name = "untitled";
+			}
+			var listItem = '<li id="' + id + '"><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">' + name + '</span></li>';
+			$('.toolbar_file_list_ZP').append(listItem);
+			
+			
+			$(window).trigger('resize');
+			currentLogBook = null;
+			currentLogBook = new DrawingLogBook(id, $('#canvas_ZP').width(), $('#canvas_ZP').height());
+			logDrawing();
+			drawingLogBookArray.push(currentLogBook);
+			prepareCanvas();
+		};
+		newDrawing(200,100,"untitled");
+		$(window).resize(resize);
 
 		var toolbarHidden = false;
 		var hideToolbar = function() {
@@ -257,11 +362,6 @@
 		});
 		showToolbar();
 
-		var addFileListItem = function(fileName, id) {
-			//'<li><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">Coffee</span></li>'
-			var listItem = '<li id="' + id + '"><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">' + fileName + '</span></li>';
-			$('.toolbar_file_list_ZP').append(listItem);
-		};
 		$('.tool_width_input_ZP').on("change mousemove", function() {
 			console.log("change: ???");
 			//$('.tool_width_shown_ZP').html($('.tool_width_input_ZP').val());
@@ -275,150 +375,70 @@
 		    };
 		}
 		
-		var ctx = document.getElementById('canvas_ZP').getContext("2d");
+		var ctx;
+		function prepareCanvas() {
+			ctx = document.getElementById('canvas_ZP').getContext("2d");
 
-		$('#canvas_ZP').mousedown(function(e){
-			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
-				brushMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
-				lineMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
-			}
-		});
-		$('#canvas_ZP').mousemove(function(e){
-			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMouseMove(pos);
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
-				brushMouseMove(pos);
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
-				lineMouseMove(pos);
-			}
-		});
-		var DrawingLogBook = function(drawingId) {
-			this.drawingId = drawingId;
-			this.index = 0;
-			this.logs = [];
-			this.logDrawing();
-		};
-		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
-			var array;
-			if (this.index == this.logs.length-1 /*&& this.logs.length > 1*/) {
-				this.logs.push(imageObject);
-				array = this.logs;
-			} else {
-				console.log("slice");
-				var tempArray = this.logs.slice(0, this.index+1);
-				tempArray.push(imageObject);
-				array = tempArray;
-			}
-			if (array.length > 1) {
-				this.index++;
-			}
-			return array;
-		};
-		DrawingLogBook.prototype.logDrawing = function() {
-			if (isFirefox) {
-				var image = new Image();
-				image.src = document.getElementById('canvas_ZP').toDataURL();
-				this.logs = this.sliceAndPush(image);
-				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
-			} else {
-				var imageData = document.getElementById('canvas_ZP').toDataURL();
-				this.logs = this.sliceAndPush(imageData);
-				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
-			}
+			$('#canvas_ZP').mousedown(function(e){
+				console.log("mousedown");
+				var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+					penMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+					brushMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+					lineMouseDown(pos, $('#color_ZP').val(), $('#tool_width_input_ZP').val());
+				}
+			});
+			$('#canvas_ZP').mousemove(function(e){
+				var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+					penMouseMove(pos);
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+					brushMouseMove(pos);
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+					lineMouseMove(pos);
+				}
+			});
+
+			$('#canvas_ZP').mouseup(function(e){
+				var pos = getMousePos(document.getElementById("canvas_ZP"), e);
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+					penMouseUp(pos);
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+					brushMouseUp(pos);
+				}
+				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
+					lineMouseUp(pos);
+				}
+				logDrawing();
+			});
 			
-		};
-
-		DrawingLogBook.prototype.undo = function() {
-			//console.log("undo() this.index: " + this.index);
-
-			if (isFirefox) {
-
-				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				if (this.index > 0) {
-					this.index--;
-					var image = this.logs[this.index];
-					ctx.drawImage(image, 0, 0);
-				}
-
-			} else {
-				ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-				if (this.index > 0) {
-					this.index--;
-					var image = new Image();
-					image.src = this.logs[this.index];
-					ctx.drawImage(image, 0, 0);
-				}
-			}
-			
-			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
-		};
-		DrawingLogBook.prototype.redo = function() {
-			if (isFirefox) {
-					if (this.index < this.logs.length-1) {
-					ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-					this.index++;
-					var image = this.logs[this.index];
-					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
-				}
-			} else {
-				if (this.index < this.logs.length-1) {
-					ctx.clearRect(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-					this.index++;
-					var image = new Image();
-					image.src = this.logs[this.index];
-					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
-				}
-			}
-		};
-		var drawingLogBookArray = [];
-		
-		var drawingLogBook = new DrawingLogBook();
-		//drawingLogBook.logDrawing();
+			$(function(){
+				$(window).mouseout(function(e){
+					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+						penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
+					}
+					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
+						brushMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
+					}
+				});
+			});
+		}
 		
 		$('.undo_button_ZP').click(function() {
-			drawingLogBook.undo();
+			undo();
 		});
 
 		$('.redo_button_ZP').click(function() {
-			drawingLogBook.redo();
+			redo();
 		});
 
-		$('#canvas_ZP').mouseup(function(e){
-			var pos = getMousePos(document.getElementById("canvas_ZP"), e);
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-				penMouseUp(pos);
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
-				brushMouseUp(pos);
-			}
-			if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
-				lineMouseUp(pos);
-			}
-			drawingLogBook.logDrawing();
-		});
-		
-		$(function(){
-			$(window).mouseout(function(e){
-				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-					penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
-				}
-				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
-					brushMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
-				}
-			});
-		});
-		
 		var previosPos;
 		
 		var circleRadius;
@@ -520,9 +540,13 @@
 		$('.alertView_cancel_ZP').click(function() {
 			close_alert();
 		});
-		var new_drawing_ZP = function() {
-			console.log("New drawing ;D");
-		};
+		$('.alertView_new_drawing_button_ZP').click(function() {
+			var width = Number($('#drawing_width_input_ZP').val());
+			var height = Number($('#drawing_height_input_ZP').val());
+			var name = $('#drawing_name_input_ZP').val();
+			newDrawing(width,height,name);
+			close_alert();
+		});
 
 		var showNewImageAlertView = function() {
 			$('.darknes_ZP').show();
@@ -534,7 +558,8 @@
 			$('.alertView_contianer_ZP').hide();
 			$('.new_image_alertView_ZP').hide();
 		};
-		
+
+
 	</script>
 
 </html>
