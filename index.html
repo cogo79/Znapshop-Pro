@@ -201,87 +201,84 @@
 			this.width = width; this.height = height;
 			this.index = 0;
 			this.logs = [];
+			this.logDrawing();
 		};
 		var drawingLogBookArray = []; var currentLogBook;
 
-		function sliceAndPush (imageObject) {
+		DrawingLogBook.prototype.sliceAndPush = function(imageObject) {
 			var array;
-			if (currentLogBook.index == currentLogBook.logs.length-1) {
-				currentLogBook.logs.push(imageObject);
-				array = currentLogBook.logs;
+			if (this.index == this.logs.length-1) {
+				this.logs.push(imageObject);
+				array = this.logs;
 			} else {
 				console.log("slice");
-				var tempArray = currentLogBook.logs.slice(0, currentLogBook.index+1);
+				var tempArray = this.logs.slice(0, this.index+1);
 				tempArray.push(imageObject);
 				array = tempArray;
 			}
 			if (array.length > 1) {
-				currentLogBook.index++;
+				this.index++;
 			}
 			return array;
 		};
-		function logDrawing() { 
+		
+		DrawingLogBook.prototype.logDrawing = function() { 
 			console.log("logDrawing");
 			if (isFirefox) {
 				var image = new Image();
 				image.src = document.getElementById('canvas_ZP').toDataURL();
-				currentLogBook.logs = sliceAndPush(image);
-				console.log("sliceAndPush() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+				this.logs = this.sliceAndPush(image);
+				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 			} else {
 				var imageData = document.getElementById('canvas_ZP').toDataURL();
-				currentLogBook.logs = sliceAndPush(imageData);
-				console.log("sliceAndPush() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+				this.logs = this.sliceAndPush(imageData);
+				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 			}
 			
 		};
 
-		function undo() {
+		DrawingLogBook.prototype.undo = function() {
 			//console.log("undo() this.index: " + this.index);
 			if (isFirefox) {
 
-				ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
-				if (currentLogBook.index > 0) {
-					currentLogBook.index--;
-					var image = currentLogBook.logs[currentLogBook.index];
+				ctx.clearRect(0, 0, this.width, this.height);
+				if (this.index > 0) {
+					this.index--;
+					var image = this.logs[this.index];
 					ctx.drawImage(image, 0, 0);
 				}
 
 			} else {
-				ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
-				if (currentLogBook.index > 0) {
-					currentLogBook.index--;
+				ctx.clearRect(0, 0, this.width, this.height);
+				if (this.index > 0) {
+					this.index--;
 					var image = new Image();
-					image.src = currentLogBook.logs[currentLogBook.index];
+					image.src = this.logs[this.index];
 					ctx.drawImage(image, 0, 0);
 				}
 			}
 			
-			console.log("after undo() this.logs.length: " + currentLogBook.logs.length + "   this.index: " + currentLogBook.index);
+			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
-		function redo() {
+		DrawingLogBook.prototype.redo = function() {
 			if (isFirefox) {
-					if (currentLogBook.index < currentLogBook.logs.length-1) {
-					ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
-					currentLogBook.index++;
-					var image = currentLogBook.logs[currentLogBook.index];
+					if (this.index < this.logs.length-1) {
+					ctx.clearRect(0, 0, this.width, this.height);
+					this.index++;
+					var image = this.logs[this.index];
 					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + currentLogBook.logs.length + "    this.index: " + currentLogBook.index);
+					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
 				}
 			} else {
-				if (currentLogBook.index < currentLogBook.logs.length-1) {
-					ctx.clearRect(0, 0, currentLogBook.width, currentLogBook.height);
-					currentLogBook.index++;
+				if (this.index < this.logs.length-1) {
+					ctx.clearRect(0, 0, this.width, this.height);
+					this.index++;
 					var image = new Image();
-					image.src = currentLogBook.logs[currentLogBook.index];
+					image.src = this.logs[this.index];
 					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + currentLogBook.logs.length + "    this.index: " + currentLogBook.index);
+					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
 				}
 			}
-		};
-
-		var addFileListItem = function(fileName, id) {
-			//'<li><span class="toolbar_file_list_item_flag_ZP">ns</span><span class="toolbar_file_list_item_name_ZP">Coffee</span></li>'
-			
 		};
 
 		var resize = function(){
@@ -327,9 +324,7 @@
 			
 			
 			$(window).trigger('resize');
-			currentLogBook = null;
 			currentLogBook = new DrawingLogBook(id, $('#canvas_ZP').width(), $('#canvas_ZP').height());
-			logDrawing();
 			drawingLogBookArray.push(currentLogBook);
 			prepareCanvas();
 		};
@@ -416,7 +411,7 @@
 				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
 					lineMouseUp(pos);
 				}
-				logDrawing();
+				currentLogBook.logDrawing();
 			});
 			
 			$(function(){
@@ -432,11 +427,11 @@
 		}
 		
 		$('.undo_button_ZP').click(function() {
-			undo();
+			currentLogBook.undo();
 		});
 
 		$('.redo_button_ZP').click(function() {
-			redo();
+			currentLogBook.redo();
 		});
 
 		var previosPos;
