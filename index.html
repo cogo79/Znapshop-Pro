@@ -255,50 +255,22 @@
 				this.logs = this.sliceAndPush(imageData);
 				console.log("sliceAndPush() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 			}
-			
 		};
 
 		DrawingLogBook.prototype.undo = function() {
-			//console.log("undo() this.index: " + this.index);
-			if (isFirefox) {
-
-				ctx.clearRect(0, 0, this.width, this.height);
-				if (this.index > 0) {
-					this.index--;
-					var image = this.logs[this.index];
-					ctx.drawImage(image, 0, 0);
-				}
-
-			} else {
-				ctx.clearRect(0, 0, this.width, this.height);
-				if (this.index > 0) {
-					this.index--;
-					var image = new Image();
-					image.src = this.logs[this.index];
-					ctx.drawImage(image, 0, 0);
-				}
+			ctx.clearRect(0, 0, this.width, this.height);
+			if (this.index > 0) {
+				this.index--;
+				this.showLogAtIndex(this.index);
 			}
-			
 			console.log("after undo() this.logs.length: " + this.logs.length + "   this.index: " + this.index);
 		};
 		DrawingLogBook.prototype.redo = function() {
-			if (isFirefox) {
-					if (this.index < this.logs.length-1) {
-					ctx.clearRect(0, 0, this.width, this.height);
-					this.index++;
-					var image = this.logs[this.index];
-					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
-				}
-			} else {
-				if (this.index < this.logs.length-1) {
-					ctx.clearRect(0, 0, this.width, this.height);
-					this.index++;
-					var image = new Image();
-					image.src = this.logs[this.index];
-					ctx.drawImage(image,0,0);
-					console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
-				}
+			if (this.index < this.logs.length-1) {
+				ctx.clearRect(0, 0, this.width, this.height);
+				this.index++;
+				this.showLogAtIndex(this.index);
+				console.log("redo() this.logs.length: " + this.logs.length + "    this.index: " + this.index);
 			}
 		};
 		DrawingLogBook.prototype.showLogAtIndex = function(index) {

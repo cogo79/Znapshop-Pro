@@ -1,3 +1,3 @@
 # Znapshop-Pro
 
-Works in Chrome and Firefox.
+A webapp for drawing. Works in the latest versions of Chrome and Firefox.
