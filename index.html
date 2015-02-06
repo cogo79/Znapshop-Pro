@@ -321,7 +321,8 @@
 			}
 			var listItem = '<div id="' + id + '" class="toolbar_file_list_item_ZP"><span class="toolbar_file_list_item_name_ZP">' + name + '</span><span class="toolbar_file_list_item_flag_ZP">ns</span></div>';
 			$('.toolbar_file_list_ZP').append(listItem);
-			console.log("New id: " + id);
+			$('.toolbar_file_list_item_ZP').css({'background-color': 'white'});
+			$('#'+id).css({'background-color': '#F5F2F5'});
 			$('#'+id).click(function() {
 				$('.toolbar_file_list_item_ZP').css({'background-color': 'white'});
 				$(this).css({'background-color': '#F5F2F5'});
@@ -329,11 +330,9 @@
 			$(window).trigger('resize');
 			currentLogBook = new DrawingLogBook(id, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 			drawingLogBookArray.push(currentLogBook);
-			
-			
 			prepareCanvas();
 		};
-		newDrawing(200,100,"untitled");
+		newDrawing(600,400,"untitled");
 		$(window).resize(resize);
 
 		var toolbarHidden = false;
@@ -555,8 +554,8 @@
 		};
 		var close_alert = function() {
 			$('#drawing_name_input_ZP').val("");
-			$('#drawing_width_input_ZP').val("500");
-			$('#drawing_height_input_ZP').val("300");
+			$('#drawing_width_input_ZP').val("600");
+			$('#drawing_height_input_ZP').val("400");
 			$('.darknes_ZP').hide();
 			$('.alertView_contianer_ZP').hide();
 			$('.new_image_alertView_ZP').hide();
