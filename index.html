@@ -141,6 +141,11 @@
 			<div class="canvasWraper_ZP">
 				<!--<canvas id="canvas_ZP" width="700" height="700"></canvas>-->
 			</div>
+			<div id="download_ZP" style="display:none;">
+				<a id="aTagForDownload_ZP" download="download.png">
+					<img id="mirrorForDownload_ZP" border="0" >
+				</a>
+			</div>
 		</div>
 		<div class="toolbar_ZP">
 			<h1 class="toolbarHeader_ZP">Tool settings</h1>
@@ -157,8 +162,9 @@
 			<input id="color_ZP" class="input_ZP" type="color">
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_button_containter_ZP">
-				<button class="save_drawing_button_ZP" type="button">Save</button>
 				<button class="new_drawing_button_ZP" type="button">New</button>
+				<button class="open_drawing_button_ZP" type="button">Open</button>
+				<button class="save_drawing_button_ZP" type="button">Save</button>
 				<button class="delete_drawing_button_ZP" type="button">Delete</button>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
@@ -186,7 +192,7 @@
 					<input id="drawing_width_input_ZP" type="number" min="0" step="1" name="width">
 					<br>
 					Height:
-					<input id="drawing_height_input_ZP" type="text" pattern="[0-9]{10}" name="height">
+					<input id="drawing_height_input_ZP" type="number" min="0" step="1" name="height">
 					<br>
 					<br>
 					<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
@@ -439,12 +445,14 @@
 			$(function(){
 				$(window).mouseout(function(e){
 					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
+						console.log("mouseout pen");
 						penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
 					}
 					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
 						brushMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
 					}
 				});
+				currentLogBook.logDrawing();
 			});
 		}
 		
@@ -577,7 +585,28 @@
 		};
 		close_alert();
 
+		$('.save_drawing_button_ZP').click(function() {
+			/*
+			<div id="download_ZP" style="display:none;">
+				<a id="aTagForDownload_ZP" download="download.png">
+					<img id="mirrorForDownload_ZP" border="0" >
+				</a>
+			</div>
+			*/
+			console.log("Save");
+			
 
+			var imageData;
+			if (isFirefox) {
+				imageData = currentLogBook.logs[currentLogBook.index].src;
+			} else {
+				imageData = currentLogBook.logs[currentLogBook.index];
+			};
+			//document.getElementById('aTagForDownload_ZP').href = imageData;
+			//document.getElementById('mirrorForDownload_ZP').src = imageData;
+			$('#download_ZP').html('<a id="aTagForDownload_ZP" href="' + imageData + '" download="' + currentLogBook.title + '.png"><img id="mirrorForDownload_ZP" src="' + imageData + '"" border="0" ></a>');
+			$('#aTagForDownload_ZP').get(0).click();
+			
+		});
 	</script>
-
 </html>
