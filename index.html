@@ -104,10 +104,6 @@
 				border-radius: 8px;
 				border: black solid 1px;
 			}
-			.toolbar_drawing_not_saved_flag_ZP {
-				margin-left: 14px;
-				color: grey;
-			}
 			.toolbar_drawing_title_ZP {
 				margin-left: 5px;
 			}
@@ -163,9 +159,7 @@
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_button_containter_ZP">
 				<button class="new_drawing_button_ZP" type="button">New</button>
-				<button class="open_drawing_button_ZP" type="button">Open</button>
 				<button class="save_drawing_button_ZP" type="button">Save</button>
-				<button class="delete_drawing_button_ZP" type="button">Delete</button>
 			</div>
 			<hr class="toolbarLine_ZP" noshade>
 			<div class="toolbar_button_containter_ZP">
@@ -186,17 +180,23 @@
 		<div class="darknes_ZP" style="display: none;">
 			<div class="alertView_contianer_ZP" style="display: none;">
 				<div class="new_image_alertView_ZP" style="display: none;">
-					New imgage<br>
-					Title: <input id="drawing_title_input_ZP" type="text" name="name"><br>
-					Width:
-					<input id="drawing_width_input_ZP" type="number" min="0" step="1" name="width">
+					<center>New image</center>
+					<center>
+						<div width="230px">
+						Title: <input id="drawing_title_input_ZP newDrawingImput_ZP" type="text" align="right" name="name"><br>
+						Width:
+						<input id="drawing_width_input_ZP newDrawingImput_ZP" align="right" type="number" min="0" step="1" name="width">
+						<br>
+						Height:
+						<input id="drawing_height_input_ZP newDrawingImput_ZP" align="right" type="number" min="0" step="1" name="height">
+					</div>
+					</center>
 					<br>
-					Height:
-					<input id="drawing_height_input_ZP" type="number" min="0" step="1" name="height">
 					<br>
-					<br>
-					<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
-					<input type="button" value="Cancel" class="alertView_cancel_ZP">
+					<center>
+						<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
+						<input type="button" value="Cancel" class="alertView_cancel_ZP">
+					</center>
 				</div>
 			</div>
 		</div>
@@ -342,7 +342,7 @@
 			if (!title) {
 				title = "untitled";
 			}
-			var listItem = '<div id="' + id + '" class="toolbar_drawing_list_item_ZP"><span class="toolbar_drawing_title_ZP">' + title + '</span><span class="toolbar_drawing_not_saved_flag_ZP">ns</span></div>';
+			var listItem = '<div id="' + id + '" class="toolbar_drawing_list_item_ZP"><span class="toolbar_drawing_title_ZP">' + title + '</span></div>';
 			$('.toolbar_list_of_drawings_ZP').append(listItem);
 			$('.toolbar_drawing_list_item_ZP').css({'background-color': 'white'});
 			$('#'+id).css({'background-color': '#F5F2F5'});
@@ -447,7 +447,6 @@
 			$(function(){
 				$(window).mouseout(function(e){
 					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("pen") == 0) {
-						console.log("mouseout pen");
 						penMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
 					}
 					if ($('.toolbarDropDownMenu_ZP').val().localeCompare("brush") == 0) {
