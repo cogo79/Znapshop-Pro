@@ -347,6 +347,7 @@
 			$('.toolbar_drawing_list_item_ZP').css({'background-color': 'white'});
 			$('#'+id).css({'background-color': '#F5F2F5'});
 			$('#'+id).click(function() {
+				console.log("Show drawing with id: " + $(this).attr('id'));
 				showDrawingWithID($(this).attr('id'));
 			});
 			$(window).trigger('resize');
@@ -439,8 +440,9 @@
 				if ($('.toolbarDropDownMenu_ZP').val().localeCompare("line") == 0) {
 					lineMouseUp(pos);
 				}
-				currentLogBook.logDrawing();
 			});
+
+			
 			
 			$(function(){
 				$(window).mouseout(function(e){
@@ -452,7 +454,6 @@
 						brushMouseUp(getMousePos(document.getElementById("canvas_ZP"), e));
 					}
 				});
-				currentLogBook.logDrawing();
 			});
 		}
 		
@@ -502,7 +503,7 @@
 				drawLine(previosPos, pos)
 				drawCircle(pos);
 				drawing = false;
-
+				currentLogBook.logDrawing();
 			}
 		};
 		var brushMouseDown = function(pos, strokeStyle, lineWidth) {
@@ -521,6 +522,7 @@
 			if (drawing) {
 				drawCircle(pos);
 				drawing = false;
+				currentLogBook.logDrawing();
 			}
 		};
 		
@@ -552,6 +554,7 @@
 			if (drawing) {
 				lineMouseMove(pos);
 				drawing = false;
+				currentLogBook.logDrawing();
 			}
 		};
 
@@ -586,24 +589,12 @@
 		close_alert();
 
 		$('.save_drawing_button_ZP').click(function() {
-			/*
-			<div id="download_ZP" style="display:none;">
-				<a id="aTagForDownload_ZP" download="download.png">
-					<img id="mirrorForDownload_ZP" border="0" >
-				</a>
-			</div>
-			*/
-			console.log("Save");
-			
-
 			var imageData;
 			if (isFirefox) {
 				imageData = currentLogBook.logs[currentLogBook.index].src;
 			} else {
 				imageData = currentLogBook.logs[currentLogBook.index];
 			};
-			//document.getElementById('aTagForDownload_ZP').href = imageData;
-			//document.getElementById('mirrorForDownload_ZP').src = imageData;
 			$('#download_ZP').html('<a id="aTagForDownload_ZP" href="' + imageData + '" download="' + currentLogBook.title + '.png"><img id="mirrorForDownload_ZP" src="' + imageData + '"" border="0" ></a>');
 			$('#aTagForDownload_ZP').get(0).click();
 			
