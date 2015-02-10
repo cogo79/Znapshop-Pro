@@ -120,6 +120,24 @@
 				border-radius: 10px;
 
 			}
+			#newDrawingInput_header_ZP {
+				font: 20px arial bold, sans-serif;
+			}
+			#newDrawingImputContainer_ZP {
+				margin-top: 10px;
+			}
+			.newDrawingImput_ZP {
+				font: 12px arial, sans-serif;
+				margin-bottom: 8px;
+				padding-right: 60px;
+			}
+			#container_for_OK_and_Cancel_buttons_ZP {
+				margin-top: 60px;
+				margin-top: -moz-calc(52px);
+			}
+			#drawing_title_input_ZP {
+				width: -moz-calc(149px);
+			}
 
 		</style>
 
@@ -180,20 +198,19 @@
 		<div class="darknes_ZP" style="display: none;">
 			<div class="alertView_contianer_ZP" style="display: none;">
 				<div class="new_image_alertView_ZP" style="display: none;">
-					<center>New image</center>
-					<center>
-						<div width="230px">
-						Title: <input id="drawing_title_input_ZP newDrawingImput_ZP" type="text" align="right" name="name"><br>
-						Width:
-						<input id="drawing_width_input_ZP newDrawingImput_ZP" align="right" type="number" min="0" step="1" name="width">
-						<br>
-						Height:
-						<input id="drawing_height_input_ZP newDrawingImput_ZP" align="right" type="number" min="0" step="1" name="height">
-					</div>
-					</center>
-					<br>
-					<br>
-					<center>
+					<center id="newDrawingInput_header_ZP">New image</center>
+						<div id="newDrawingImputContainer_ZP">
+							<div align="right" class="newDrawingImput_ZP">
+								Title: <input id="drawing_title_input_ZP" type="text" name="name">
+							</div>
+							<div align="right" class="newDrawingImput_ZP">
+								Width: <input id="drawing_width_input_ZP" align="right" type="number" min="0" step="1" name="width">
+							</div>
+							<div align="right" class="newDrawingImput_ZP">
+								Height: <input id="drawing_height_input_ZP" align="right" type="number" min="0" step="1" name="height">
+							</div>
+						</div>
+					<center id="container_for_OK_and_Cancel_buttons_ZP">
 						<input type="button" value="OK" class="alertView_new_drawing_button_ZP">
 						<input type="button" value="Cancel" class="alertView_cancel_ZP">
 					</center>
