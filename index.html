@@ -363,8 +363,6 @@
 			currentLogBook = new DrawingLogBook(id, title, width, height);
 			drawingLogBookCollection.array.push(currentLogBook);
 			prepareCanvas();
-
-			drawingLogBookCollection.getDrawingWithID(id);
 		};
 		newDrawing("untitled",600,400);
 		$(window).resize(resize);
@@ -533,8 +531,6 @@
 			imageObject : null
 		};
 		var lineMouseDown = function(pos, strokeStyle, lineWidth) {
-			//var c = document.createElement("CANVAS").getContext("2d");
-			//imageData = c.getImageData(0, 0, $('#canvas_ZP').width(), $('#canvas_ZP').height());
 			var imageData = document.getElementById('canvas_ZP').toDataURL();
 			var imageObject = new Image();
 			imageObject.src = imageData;
